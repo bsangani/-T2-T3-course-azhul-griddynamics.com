@@ -1,0 +1,23 @@
+// start zookeeper
+./bin/zookeeper-server-start.sh zookeeper/zookeeper.properties
+
+// start kafka broker-1
+./bin/kafka-server-start.sh config/server-1.properties
+
+// start kafka broker-2
+./bin/kafka-server-start.sh config/server-2.properties
+
+// create input topic with 5 partition
+./bin/kafka-topics.sh --create --bootstrap-server localhost:9092,localhost:9093 --partitions 5 --replication-factor 2 --config retention.ms=3600000 --topic github-events
+
+// create output topic with 5 partition
+./bin/kafka-topics.sh --create --bootstrap-server localhost:9092,localhost:9093 --partitions 5 --replication-factor 2 --config retention.ms=3600000 --topic github-commits
+
+# Create total-commits-output topic
+./bin/kafka-topics.sh --create --topic total-commits-output --bootstrap-server localhost:9092,localhost:9093 --partitions 3 --replication-factor 2
+
+# Create total-committers-output topic
+./bin/kafka-topics.sh --create --topic total-committers-output --bootstrap-server localhost:9092,localhost:9093 --partitions 3 --replication-factor 2
+
+# Create commits-per-language-output topic
+./bin/kafka-topics.sh --create --topic commits-per-language-output --bootstrap-server localhost:9092,localhost:9093 --partitions 3 --replication-factor 2
